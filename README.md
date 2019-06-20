@@ -1,68 +1,70 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 创建项目
 
-## Available Scripts
+1、全局安装脚手架：
+$ npm install -g create-react-app
 
-In the project directory, you can run:
+2、通过脚手架搭建项目：
+$ create-react-app <项目名称>
 
-### `npm start`
+3、开始项目：
+$ cd <项目名>
+$ npm run start
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## src目录说明
+src-01：尚未连接 Redux Store 的UI组件源码
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 使用 React-Redux 
 
-### `npm run build`
+1、安装
+```
+npm install --save react-redux
+或者
+yarn add react-redux
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+2、连接组件
+React-Redux提供一个connect方法使你可以从Redux store中读取数据（以及当store更新后，重新读取数据）
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+connect方法接收两个参数，都是可选参数：
 
-### `npm run eject`
+mapStateToProps：每当store state发生变化时，就被调用。接收整个store state，并且返回一个该组件所需要的数据对象
+mapDispatchToProps：这个参数可以是一个函数或对象
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+如果是一个函数，一旦该组件被创建，就会被调用。接收dispatch作为一个参数，并且返回一个能够使用dispatch来分发actions的若干函数组成的对象
+如果是一个action creators构成的对象，每一个action creator将会转化为一个prop function并会在调用时自动分发actions。注意： 我们建议使用这种形式。
+通常，你可以这样去connect：
+```
+const mapStateToProps = (state, ownProps) => ({
+  // ... 从state中处理的一些数据，以及可选的ownProps
+});
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+const mapDispatchToProps = {
+  // ... 通常是action creators构成的对象
+};
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+// `connect`返回一个新的函数，可以接收一个待包装的组件
+const connectToStore = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+// 上面的函数能够返回一个已经包装、连接过的组件
+const ConnectedComponent = connectToStore(Component);
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+// 我们通常写成一条语句如下：
+connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Component);
+```
+下面让我们开始编写<AddTodo/>。它要能够触发store的变化从而增加新的todos。因此，他要能够向store dispatch actions。
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3、[https://segmentfault.com/a/1190000017064759?utm_source=tag-newest](https://segmentfault.com/a/1190000017064759?utm_source=tag-newest)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+4、[详解react、redux、react-redux之间的关系](https://www.jianshu.com/p/728a1afce96d)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+5、[vue-easytable](http://doc.huangsw.com/vue-easytable/app.html#/install)
