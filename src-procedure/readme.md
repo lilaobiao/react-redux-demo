@@ -1,4 +1,27 @@
-# 创建Store
+# 创建项目
+
+1、全局安装脚手架：
+$ npm install -g create-react-app
+
+2、通过脚手架搭建项目：
+$ create-react-app <项目名称>
+
+3、开始项目：
+$ cd <项目名>
+$ npm run start
+
+
+# 使用 React-Redux 
+
+1、安装
+```
+npm install --save react-redux
+或者
+yarn add react-redux
+```
+
+## 创建Store
+
 首先我们需要让store成为我们app中可访问的对象。为此，我们将用React-Redux提供给我们的<Provider/>组件包裹我们的根组件
 
 1、创建redux文件夹
@@ -113,16 +136,24 @@ ReactDOM.render(
 ```
 
 
-# 连接组件
+## 连接组件
 
 React-Redux提供一个connect方法使你可以从Redux store中读取数据（以及当store更新后，重新读取数据）
+
 connect方法接收两个参数，都是可选参数：
-mapStateToProps：每当store state发生变化时，就被调用。接收整个store state，并且返回一个该组件所需要的数据对象。mapStateToProps应该声明为一个方法：
+
+mapStateToProps：每当store state发生变化时，就被调用。接收整个store state，并且返回一个该组件所需要的数据对象
+mapDispatchToProps：这个参数可以是一个函数或对象
+
+如果是一个函数，一旦该组件被创建，就会被调用。接收dispatch作为一个参数，并且返回一个能够使用dispatch来分发actions的若干函数组成的对象
+如果是一个action creators构成的对象，每一个action creator将会转化为一个prop function并会在调用时自动分发actions。注意： 我们建议使用这种形式。
+通常，你可以这样去connect：
+
 ```
 function mapStateToProps(state, ownProps?)
 ```
-它接收的第一个参数是state，可选的第二个参数是 ownProps，然后返回一个被连接组件所需要的数据的纯对象。
 
+它接收的第一个参数是state，可选的第二个参数是 ownProps，然后返回一个被连接组件所需要的数据的纯对象。
 
 ```
 const mapStateToProps = (state, ownProps) => ({
@@ -148,8 +179,7 @@ connect(
 )(Component);
 ```
 
-
-# 实现
+## 实现
 
 Action 本质上是一个 JavaScript 普通对象。我们约定，action 内必须使用一个字符串类型的 type 字段来表示将要执行的动作。多数情况下，type 会被定义成字符串常量。当应用规模越来越大时，建议使用单独的模块或文件来存放 action。除了 type 字段外，action 对象的结构完全由你自己决定。
 
@@ -262,6 +292,7 @@ export default connect(mapStateToProps)(TodoList);
 这个时候，我们已经连接了 TodoList 组件，当我们通过点击按钮增加一个新的 todo 时，TodoList 已经有了变化
 
 5、过滤 todo
+
 我们的 <Todo/> 组件接收一个 todo 项作为 prop。我们从 todos 的 btIds 对象获取到所需信息。然而，我们也需要 store 中的 allIds 字段的信息，以便指明哪些 todos 以哪种顺序渲染。
 
 我们可以添加一个 selector.js 文件，专门用来过滤todo
@@ -294,6 +325,7 @@ const TodoList = // ... UI component implementation
 
 export default connect(state => ({ todos: getTodos(state) }))(TodoList);
 ```
+
 关于 selector，的更多内容，可访问[Redux中文文档 | 计算衍生数据](https://cn.redux.js.org/docs/recipes/ComputingDerivedData.html)以及博客：
 [Idiomatic Redux: Using Reselect Selectors for Encapsulation and Performance](https://blog.isquaredsoftware.com/2017/12/idiomatic-redux-using-reselect-selectors/)
 
@@ -303,6 +335,7 @@ export default connect(state => ({ todos: getTodos(state) }))(TodoList);
 <VisiblityFilterse/> 组件需要从 store 中读取当前选中的过滤条件，并且分发 actions。因此，我们需要把 mapStateToProps 以及 mapDispatchToProps 都传递给 connect 方法。mapStateToProps 能够作为 visiblityFilter 状态的一个简单的访问器。mapDispatchToProps 会包括 setFilteraction 创建函数。
 
 首先添加actions
+
 ```
 // redux/actions.js
 
@@ -415,6 +448,7 @@ export default connect(mapStateToProps)(TodoList);
 7、实现 toggleTodo 功能。
 
 首先添加 toggleTodo actions
+
 ```
 // redux/actions.js
 
